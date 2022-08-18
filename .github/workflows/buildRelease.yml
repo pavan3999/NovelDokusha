@@ -1,15 +1,21 @@
 name: Publish Release
 
 on:
-  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+    # Manual triggers
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)
+        required: false
+      dry-run:
+        description: Creates a draft release
+        required: false
 
-jobs: # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-  buildRelease: # Job
+jobs:
+  buildRelease:
     name: Build Release APK
-    runs-on: ubuntu-latest # The type of runner that the job will run on   
-    steps: # Steps represent a sequence of tasks that will be executed as part of the job
-      
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    runs-on: ubuntu-latest
+    steps:
       - name: Clone Repository (Latest)
         uses: actions/checkout@v2
         with:
@@ -24,11 +30,18 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
           fetch-depth: 0
           ref: ${{ github.event.inputs.git-ref }}
 
-        
-      - name: Set up JDK enviroment
+      - name: Set up JDK environment
         uses: actions/setup-java@v1.4.3
         with:
           java-version: 11
+
+      - name: Get previous release
+        id: last_release
+        uses: InsonusK/get-latest-release@v1.0.1
+        with:
+          myToken: ${{ github.token }}
+          exclude_types: "draft|prerelease"
+          view_top: 1
 
       - name: Prepare build
         run: |
@@ -50,9 +63,9 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
             | jq '[.commits[]|{message:(.commit.message | split("\n")), username:.author.login}]' \
             | jq -r '.[]|"- \(.message | first) (@\(.username))"')
           {delimiter}" >> $GITHUB_ENV
-          
+
       - name: Build app
-        uses: eskatos/gradle-command-action@v1.3.3
+        uses: gradle/gradle-command-action@v2
         with:
           arguments: assembleRelease
           wrapper-cache-enabled: true
