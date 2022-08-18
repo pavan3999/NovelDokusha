@@ -65,9 +65,9 @@ jobs:
           {delimiter}" >> $GITHUB_ENV
 
       - name: Build APK
-        uses: eskatos/gradle-command-action@v1.3.3
+        uses: gradle/gradle-command-action@v2.2.3
         with:
-          arguments: assemblefullRelease
+          arguments: assembleFullRelease
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
