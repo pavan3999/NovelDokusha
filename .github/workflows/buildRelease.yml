@@ -36,7 +36,7 @@ jobs:
           java-version: 11
 
       - name: Build app
-        uses: gradle/gradle-command-action@v2
+        uses: eskatos/gradle-command-action@v1.3.3
         with:
           arguments: assemblefullRelease
           wrapper-cache-enabled: true
@@ -56,11 +56,11 @@ jobs:
       - name: Create Release
         uses: actions/upload-artifact@v2
         with:
-          name: NovelDokusha
-          path: app/build/outputs/apk/full/release
+          name: NovelDokusha arm64-v8a
+          path: app/build/outputs/apk/full/release/*-arm64-v8a-release-unsigned-signed.apk
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: NovelDokusha
+          name: NovelDokusha arm64-v8a
 
