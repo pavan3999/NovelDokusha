@@ -85,7 +85,7 @@ jobs:
         run: |
           set -e
 
-          cp app/build/outputs/apk/full/release/*-universal-release-unsigned-signed.apk NovelDokusha-full-universal-r${{ env.COMMIT_COUNT }}.apk
+          cp app/build/outputs/apk/full/release/*-release-unsigned-signed.apk NovelDokusha-full-universal-r${{ env.COMMIT_COUNT }}.apk
           sha=`sha256sum NovelDokusha-full-universal-r${{ env.COMMIT_COUNT }}.apk | awk '{ print $1 }'`
           echo "APK_UNIVERSAL_SHA=$sha" >> $GITHUB_ENV
 
