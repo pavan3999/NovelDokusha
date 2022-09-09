@@ -64,45 +64,44 @@ jobs:
             | jq -r '.[]|"- \(.message | first) (@\(.username))"')
           {delimiter}" >> $GITHUB_ENV
 
+      - name: Setup APK signing
+        run: |
+          echo -n ${{ secrets.SIGNING_KEY }} | base64 -d > app/storeFile.jsk
+          echo storeFile=storeFile.jsk > custom.properties
+          echo storePassword=${{ secrets.KEY_STORE_PASSWORD }} >> custom.properties
+          echo keyAlias=${{ secrets.ALIAS }} >> custom.properties
+          echo keyPassword=${{ secrets.KEY_PASSWORD }} >> custom.properties
+
       - name: Build APK
         uses: gradle/gradle-command-action@v2.2.3
         with:
-          arguments: assembleFullRelease
+          arguments: assembleFullRelease -PsplitByAbi -PsplitByAbiDoUniversal -PlocalPropertiesFilePath=custom.properties
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
           gradle-version: current
 
-      - name: Sign FULL APK
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/apk/full/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-
       - name: Clean up build artifacts
         run: |
           set -e
 
-          cp app/build/outputs/apk/full/release/*-universal-release-unsigned-signed.apk NovelDokusha-full-universal-r${{ env.COMMIT_COUNT }}.apk
+          cp app/build/outputs/apk/full/release/*-full-universal-release.apk NovelDokusha-full-universal-r${{ env.COMMIT_COUNT }}.apk
           sha=`sha256sum NovelDokusha-full-universal-r${{ env.COMMIT_COUNT }}.apk | awk '{ print $1 }'`
           echo "APK_UNIVERSAL_SHA=$sha" >> $GITHUB_ENV
 
-          cp app/build/outputs/apk/full/release/*-arm64-v8a-release-unsigned-signed.apk NovelDokusha-full-arm64-v8a-r${{ env.COMMIT_COUNT }}.apk
+          cp app/build/outputs/apk/full/release/*-full-arm64-v8a-release.apk NovelDokusha-full-arm64-v8a-r${{ env.COMMIT_COUNT }}.apk
           sha=`sha256sum NovelDokusha-full-arm64-v8a-r${{ env.COMMIT_COUNT }}.apk | awk '{ print $1 }'`
           echo "APK_ARM64_V8A_SHA=$sha" >> $GITHUB_ENV
 
-          cp app/build/outputs/apk/full/release/*-armeabi-v7a-release-unsigned-signed.apk NovelDokusha-full-armeabi-v7a-r${{ env.COMMIT_COUNT }}.apk
+          cp app/build/outputs/apk/full/release/*-full-armeabi-v7a-release.apk NovelDokusha-full-armeabi-v7a-r${{ env.COMMIT_COUNT }}.apk
           sha=`sha256sum NovelDokusha-full-armeabi-v7a-r${{ env.COMMIT_COUNT }}.apk | awk '{ print $1 }'`
           echo "APK_ARMEABI_V7A_SHA=$sha" >> $GITHUB_ENV
 
-          cp app/build/outputs/apk/full/release/*-x86-release-unsigned-signed.apk NovelDokusha-full-x86-r${{ env.COMMIT_COUNT }}.apk
+          cp app/build/outputs/apk/full/release/*-full-x86-release.apk NovelDokusha-full-x86-r${{ env.COMMIT_COUNT }}.apk
           sha=`sha256sum NovelDokusha-full-x86-r${{ env.COMMIT_COUNT }}.apk | awk '{ print $1 }'`
           echo "APK_X86_SHA=$sha" >> $GITHUB_ENV
 
-          cp app/build/outputs/apk/full/release/*-x86_64-release-unsigned-signed.apk NovelDokusha-full-x86_64-r${{ env.COMMIT_COUNT }}.apk
+          cp app/build/outputs/apk/full/release/*-full-x86_64-release.apk NovelDokusha-full-x86_64-r${{ env.COMMIT_COUNT }}.apk
           sha=`sha256sum NovelDokusha-full-x86_64-r${{ env.COMMIT_COUNT }}.apk | awk '{ print $1 }'`
           echo "APK_X86_64_SHA=$sha" >> $GITHUB_ENV
 
