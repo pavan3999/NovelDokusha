@@ -64,23 +64,22 @@ jobs:
             | jq -r '.[]|"- \(.message | first) (@\(.username))"')
           {delimiter}" >> $GITHUB_ENV
 
+      - name: Setup APK signing
+        run: |
+          echo -n ${{ secrets.SIGNING_KEY }} | base64 -d > app/storeFile.jsk
+          echo storeFile=storeFile.jsk > custom.properties
+          echo storePassword=${{ secrets.KEY_STORE_PASSWORD }} >> custom.properties
+          echo keyAlias=${{ secrets.ALIAS }} >> custom.properties
+          echo keyPassword=${{ secrets.KEY_PASSWORD }} >> custom.properties
+
       - name: Build APK
         uses: gradle/gradle-command-action@v2.2.3
         with:
-          arguments: assembleFullRelease -PsplitByAbi
+          arguments: assembleFullRelease -PsplitByAbi -PsplitByAbiDoUniversal -PlocalPropertiesFilePath=custom.properties
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
           gradle-version: current
-
-      - name: Sign FULL APK
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/apk/full/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Clean up build artifacts
         run: |
