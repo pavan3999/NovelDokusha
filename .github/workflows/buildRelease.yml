@@ -67,7 +67,7 @@ jobs:
       - name: Build APK
         uses: gradle/gradle-command-action@v2.2.3
         with:
-          arguments: assembleFullRelease
+          arguments: assembleFullRelease -PsplitApks
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
