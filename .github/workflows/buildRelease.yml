@@ -82,14 +82,10 @@ jobs:
           echo keyAlias=${{ secrets.ALIAS }} >> custom.properties
           echo keyPassword=${{ secrets.KEY_PASSWORD }} >> custom.properties
 
-      - name: Build APK
-        uses: gradle/gradle-command-action@v2.2.3
-        with:
-          arguments: assembleFullRelease -PsplitByAbi -PsplitByAbiDoUniversal -PlocalPropertiesFilePath=custom.properties
-          wrapper-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
-          gradle-version: current
+      - name: Build app
+        run: |
+          gradle assembleFullRelease -PsplitByAbi -PsplitByAbiDoUniversal -PlocalPropertiesFilePath=custom.properties
+
 
       - name: Clean up build artifacts
         run: |
