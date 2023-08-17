@@ -40,10 +40,10 @@ jobs:
         with:
           python-version: 3.11
 
-      - name: Setup Gradle version to 9
+      - name: Setup Gradle version to 8.2.1
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 9
+          gradle-version: 8.2.1
 
       - name: Get previous release
         id: last_release
