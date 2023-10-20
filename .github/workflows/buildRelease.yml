@@ -73,8 +73,8 @@ jobs:
             | jq '[.commits[]|{message:(.commit.message | split("\n")), username:.author.login}]' \
             | jq -r '.[]|"- \(.message | first) (@\(.username))"')
           {delimiter}" >> $GITHUB_ENV
-          cd /d "%ANDROID_SDK_ROOT%/tools/bin"
-          sdkmanager --licenses
+          cd ~/Library/Android/sdk/tools/bin/
+          ./sdkmanager --licenses
 
       - name: Setup APK signing
         run: |
