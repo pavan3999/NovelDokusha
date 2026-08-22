@@ -89,6 +89,7 @@ jobs:
 
       - name: Build app
         run: |
+          chmod +x ./gradlew
           ./gradlew assembleFullRelease --stacktrace --warning-mode all -PsplitByAbi -PsplitByAbiDoUniversal -PlocalPropertiesFilePath=custom.properties
 
 
