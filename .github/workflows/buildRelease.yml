@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository (Latest)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: 'Nabeelshar/WebnovelReader'
           fetch-depth: 0
         if: github.event.inputs.git-ref == ''
       - name: Clone Repository (Custom Ref)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         if: github.event.inputs.git-ref != ''
         with:
           repository: 'Nabeelshar/WebnovelReader'
@@ -37,15 +37,15 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v5
+        uses: android-actions/setup-android@v4
 
       - name: Setup Python enviroment
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: 3.11
 
       - name: Setup Gradle version to 8.2
-        uses: gradle/gradle-build-action@v5
+        uses: gradle/gradle-build-action@v3
         with:
           gradle-version: 8.2
 
@@ -116,7 +116,7 @@ jobs:
           echo "APK_X86_64_SHA=$sha" >> $GITHUB_ENV
 
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: r${{ env.COMMIT_COUNT }}
           name: NovelDokusha full r${{ env.COMMIT_COUNT }}
