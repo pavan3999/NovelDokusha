@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository (Latest)
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           repository: 'Nabeelshar/WebnovelReader'
           fetch-depth: 0
         if: github.event.inputs.git-ref == ''
       - name: Clone Repository (Custom Ref)
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         if: github.event.inputs.git-ref != ''
         with:
           repository: 'Nabeelshar/WebnovelReader'
