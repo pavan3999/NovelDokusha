@@ -19,14 +19,14 @@ jobs:
       - name: Clone Repository (Latest)
         uses: actions/checkout@v2
         with:
-          repository: 'nanihadesuka/NovelDokusha'
+          repository: 'Nabeelshar/WebnovelReader'
           fetch-depth: 0
         if: github.event.inputs.git-ref == ''
       - name: Clone Repository (Custom Ref)
         uses: actions/checkout@v2
         if: github.event.inputs.git-ref != ''
         with:
-          repository: 'nanihadesuka/NovelDokusha'
+          repository: 'Nabeelshar/WebnovelReader'
           fetch-depth: 0
           ref: ${{ github.event.inputs.git-ref }}
 
